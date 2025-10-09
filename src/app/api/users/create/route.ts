@@ -56,15 +56,15 @@ export async function POST(request: Request) {
       userId: userRef.id,
       data: userData
     }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating user:', error);
     // Return more detailed error information in development
     if (process.env.NODE_ENV === 'development') {
       return NextResponse.json(
         { 
           error: 'Internal server error', 
-          details: error.message || 'Unknown error',
-          code: error.code || 'UNKNOWN'
+          details: (error as Error).message || 'Unknown error',
+          code: (error as Error & { code?: string }).code || 'UNKNOWN'
         },
         { status: 500 }
       );

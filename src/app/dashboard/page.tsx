@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import ResponsiveLayout from "@/components/ResponsiveLayout";
 import { useTheme } from '@/context/ThemeContext';
@@ -87,12 +86,12 @@ export default function Dashboard() {
   };
 
   // Custom tooltip for charts
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ dataKey: string; name: string; value: number; color: string }>; label?: string }) => {
     if (active && payload && payload.length) {
       return (
         <div className={`border p-3 rounded-lg shadow-lg ${theme === 'dark' ? 'bg-card border-border' : 'bg-white border-gray-200'}`}>
           <p className={`text-sm ${theme === 'dark' ? 'text-foreground' : 'text-gray-900'}`}>{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               {entry.dataKey === 'value' ? 'Portfolio' : entry.name}: {formatCurrency(entry.value)}
             </p>

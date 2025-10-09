@@ -1,5 +1,5 @@
 import { auth } from './firebase';
-import { signInWithCustomToken, UserCredential, User } from 'firebase/auth';
+import { signInWithCustomToken, UserCredential } from 'firebase/auth';
 import { verifyMessage } from 'viem';
 
 export interface WalletAuthResult {
@@ -52,9 +52,9 @@ export async function authenticateWithWallet(
     // Sign in with the custom token returned from our backend
     const userCredential = await signInWithCustomToken(auth, data.token);
     return { success: true, user: userCredential };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Wallet authentication error:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: (error as Error).message };
   }
 }
 

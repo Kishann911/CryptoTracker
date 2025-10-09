@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useTheme } from '@/context/ThemeContext';
 
 interface BarDataPoint {
@@ -31,12 +31,12 @@ const CryptoBarChart = ({ data, title = "Cryptocurrency Comparison" }: CryptoBar
   };
 
   // Custom tooltip component
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ dataKey: string; value: number; color: string }>; label?: string }) => {
     if (active && payload && payload.length) {
       return (
         <div className={`border p-3 rounded-lg shadow-lg ${theme === 'dark' ? 'bg-card border-border' : 'bg-white border-gray-200'}`}>
           <p className={`text-sm ${theme === 'dark' ? 'text-foreground' : 'text-gray-900'}`}>{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               {entry.dataKey}: {formatCurrency(entry.value)}
             </p>

@@ -41,13 +41,13 @@ export async function POST(request: Request) {
     let userId;
     if (userQuery.empty) {
       // Create new user document
-      const newUser: any = {
+      const newUser: Record<string, unknown> = {
         walletAddress: address,
         createdAt: new Date(),
         lastLogin: new Date(),
         preferences: {
           currency: 'USD',
-          theme: 'dark',
+          theme: 'dark' as const,
           notifications: true
         }
       };
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
       // Update existing user's lastLogin
       const userDoc = userQuery.docs[0];
       userId = userDoc.id;
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         lastLogin: new Date()
       };
       

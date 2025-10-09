@@ -7,6 +7,7 @@ import { Dock, DockIcon, DockItem } from '@/components/ui/dock';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, User, signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface ResponsiveLayoutProps {
   children: ReactNode;
@@ -40,7 +41,7 @@ interface NavItem {
 export default function ResponsiveLayout({ children, activePage }: ResponsiveLayoutProps) {
   const router = useRouter();
   const { theme } = useTheme();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Removed unused sidebarOpen state
   const [showAlertsPopup, setShowAlertsPopup] = useState(false);
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const [activeAlerts, setActiveAlerts] = useState<Alert[]>([]);
@@ -96,21 +97,6 @@ export default function ResponsiveLayout({ children, activePage }: ResponsiveLay
     }
   };
 
-  // Listen for auth state changes
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        // Load user profile data
-        await loadUserProfile(currentUser.uid);
-      } else {
-        setUserProfile(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   const loadUserProfile = async (uid: string) => {
     setLoadingProfile(true);
     try {
@@ -156,6 +142,21 @@ export default function ResponsiveLayout({ children, activePage }: ResponsiveLay
       setLoadingProfile(false);
     }
   };
+
+  // Listen for auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        // Load user profile data
+        await loadUserProfile(currentUser.uid);
+      } else {
+        setUserProfile(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [loadUserProfile]);
 
   // Extract display name from email
   const getUserDisplayNameFromEmail = () => {
@@ -341,10 +342,12 @@ export default function ResponsiveLayout({ children, activePage }: ResponsiveLay
                       {loadingProfile ? (
                         <div className="w-4 h-4 border-t-2 border-white border-solid rounded-full animate-spin"></div>
                       ) : userProfile?.photoURL ? (
-                        <img 
+                        <Image 
                           src={userProfile.photoURL} 
                           alt={userProfile.name} 
-                          className="w-8 h-8 rounded-full object-cover"
+                          width={32}
+                          height={32}
+                          className="rounded-full object-cover"
                         />
                       ) : (
                         <span className="font-bold text-sm text-white">

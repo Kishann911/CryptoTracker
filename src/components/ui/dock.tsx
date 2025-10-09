@@ -244,7 +244,7 @@ function DockLabel({ children, className }: DockLabelProps) {
   );
 }
 
-function DockIcon({ children, className, width, theme }: DockIconProps) {
+function DockIcon({ children, className, theme }: DockIconProps) {
   return (
     <div className={cn(
       'flex items-center justify-center transition-all duration-200',

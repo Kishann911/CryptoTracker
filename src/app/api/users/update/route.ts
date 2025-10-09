@@ -36,7 +36,7 @@ export async function PUT(request: Request) {
     const db = admin.firestore();
 
     // Prepare update data
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       lastLogin: new Date(),
     };
 
@@ -63,15 +63,15 @@ export async function PUT(request: Request) {
       message: 'User updated successfully',
       data: updateData
     }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating user:', error);
     // Return more detailed error information in development
     if (process.env.NODE_ENV === 'development') {
       return NextResponse.json(
         { 
           error: 'Internal server error', 
-          details: error.message || 'Unknown error',
-          code: error.code || 'UNKNOWN'
+          details: (error as Error).message || 'Unknown error',
+          code: (error as Error & { code?: string }).code || 'UNKNOWN'
         },
         { status: 500 }
       );

@@ -348,7 +348,7 @@ export default function Home() {
               </div>
             </div>
             <p className="text-foreground text-sm italic">
-              "The real-time alerts and portfolio analytics have transformed how I manage my crypto investments. The platform's insights helped me avoid significant losses during market downturns."
+              &quot;The real-time alerts and portfolio analytics have transformed how I manage my crypto investments. The platform&apos;s insights helped me avoid significant losses during market downturns.&quot;
             </p>
             <div className="mt-4 text-muted-foreground text-xs">
               Portfolio Manager, Crypto Hedge Fund
@@ -366,7 +366,7 @@ export default function Home() {
               </div>
             </div>
             <p className="text-foreground text-sm italic">
-              "As a data-driven investor, I appreciate the depth of analytics available. The correlation analysis and risk metrics provide insights I can't get from other platforms."
+              &quot;As a data-driven investor, I appreciate the depth of analytics available. The correlation analysis and risk metrics provide insights I can&apos;t get from other platforms.&quot;
             </p>
             <div className="mt-4 text-muted-foreground text-xs">
               Quantitative Analyst, Blockchain Venture Capital
@@ -384,7 +384,7 @@ export default function Home() {
               </div>
             </div>
             <p className="text-foreground text-sm italic">
-              "The automated rebalancing feature has saved me countless hours while maintaining my target allocation. The tax-loss harvesting integration is a game-changer for my investment strategy."
+              &quot;The automated rebalancing feature has saved me countless hours while maintaining my target allocation. The tax-loss harvesting integration is a game-changer for my investment strategy.&quot;
             </p>
             <div className="mt-4 text-muted-foreground text-xs">
               Private Investor, 7+ Years Experience

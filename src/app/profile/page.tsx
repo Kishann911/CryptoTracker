@@ -5,6 +5,7 @@ import ResponsiveLayout from "@/components/ResponsiveLayout";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User, signOut } from "firebase/auth";
 import { useTheme } from '@/context/ThemeContext';
+import Image from 'next/image';
 
 export default function Profile() {
   const { theme } = useTheme();
@@ -162,10 +163,12 @@ export default function Profile() {
         <div className="flex flex-col items-center mb-6">
           <div className="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center mb-4">
             {profile.photoURL ? (
-              <img 
+              <Image 
                 src={profile.photoURL} 
                 alt={profile.name} 
-                className="w-24 h-24 rounded-full object-cover"
+                width={96}
+                height={96}
+                className="rounded-full object-cover"
               />
             ) : (
               <span className="font-bold text-2xl text-white">

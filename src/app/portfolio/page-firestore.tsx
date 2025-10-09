@@ -7,12 +7,51 @@ import { auth, db } from "@/lib/firebase";
 import ResponsiveLayout from "@/components/ResponsiveLayout";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
+interface PortfolioAsset {
+  assetId: string;
+  amount: number;
+  value: number;
+  allocation: number;
+}
+
+interface PortfolioData {
+  id: string;
+  userId: string;
+  totalValue: number;
+  change24h: number;
+  assets: PortfolioAsset[];
+  [key: string]: unknown; // For any additional properties
+}
+
+interface Transaction {
+  id: string;
+  userId: string;
+  assetId: string;
+  type: 'buy' | 'sell';
+  amount: number;
+  price: number;
+  totalValue: number;
+  date: Date;
+  notes: string;
+  fee: number;
+  [key: string]: unknown; // For any additional properties
+}
+
+interface Asset {
+  id: string;
+  name: string;
+  symbol: string;
+  price: number;
+  change24h: number;
+  [key: string]: unknown; // For any additional properties
+}
+
 export default function PortfolioFirestore() {
   const [user, loading, error] = useAuthState(auth);
   const [activeTab, setActiveTab] = useState("holdings");
-  const [portfolioData, setPortfolioData] = useState<any>(null);
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [assets, setAssets] = useState<any[]>([]);
+  const [portfolioData, setPortfolioData] = useState<PortfolioData | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [assets, setAssets] = useState<Asset[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [newTransaction, setNewTransaction] = useState({
     type: "buy",
@@ -31,7 +70,7 @@ export default function PortfolioFirestore() {
     const unsubscribePortfolio = onSnapshot(portfolioQuery, (querySnapshot) => {
       if (!querySnapshot.empty) {
         const doc = querySnapshot.docs[0];
-        setPortfolioData({ id: doc.id, ...doc.data() });
+        setPortfolioData({ id: doc.id, ...doc.data() } as PortfolioData);
       }
       setLoadingData(false);
     });
@@ -43,7 +82,7 @@ export default function PortfolioFirestore() {
         id: doc.id,
         ...doc.data()
       }));
-      setTransactions(transactionsData);
+      setTransactions(transactionsData as Transaction[]);
     });
 
     // Fetch assets
@@ -53,7 +92,7 @@ export default function PortfolioFirestore() {
         id: doc.id,
         ...doc.data()
       }));
-      setAssets(assetsData);
+      setAssets(assetsData as Asset[]);
     });
 
     return () => {
@@ -207,7 +246,7 @@ export default function PortfolioFirestore() {
                 </tr>
               </thead>
               <tbody>
-                {portfolioData?.assets?.map((asset: any) => {
+                {portfolioData?.assets?.map((asset: PortfolioAsset) => {
                   const assetData = assets.find(a => a.id === asset.assetId);
                   return (
                     <tr key={asset.assetId} className="border-t border-gray-700">
@@ -339,7 +378,7 @@ export default function PortfolioFirestore() {
                       <td className="py-3 text-sm">${transaction.price?.toFixed(2)}</td>
                       <td className="py-3 text-sm">${transaction.totalValue?.toFixed(2)}</td>
                       <td className="py-3 text-sm hidden sm:table-cell">
-                        {transaction.date ? new Date(transaction.date.toDate()).toLocaleDateString() : 'N/A'}
+                        {transaction.date ? (transaction.date instanceof Date ? transaction.date.toLocaleDateString() : new Date(transaction.date).toLocaleDateString()) : 'N/A'}
                       </td>
                       <td className="py-3">
                         <button 
@@ -391,7 +430,7 @@ export default function PortfolioFirestore() {
               </div>
               
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                {portfolioData?.assets?.slice(0, 4).map((asset: any, index: number) => {
+                {portfolioData?.assets?.slice(0, 4).map((asset: PortfolioAsset, index: number) => {
                   const assetData = assets.find(a => a.id === asset.assetId);
                   const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-gray-500'];
                   return (

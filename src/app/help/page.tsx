@@ -286,9 +286,9 @@ export default function HelpPage() {
                 ))
               ) : (
                 <div className="p-8 text-center">
-                  <div className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>No results found for "{searchTerm}"</div>
+                  <div className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>No results found for &quot;{searchTerm}&quot;</div>
                   <div className={`mt-4 text-sm ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
-                    Can't find what you're looking for? <Link href="#contact" className={theme === 'dark' ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'}>Contact support</Link>
+                    Can&apos;t find what you&apos;re looking for? <Link href="#contact" className={theme === 'dark' ? 'text-blue-400 hover:underline' : 'text-blue-600 hover:underline'}>Contact support</Link>
                   </div>
                 </div>
               )}
@@ -821,7 +821,7 @@ export default function HelpPage() {
           }`}>
             <h3 className="font-bold text-xl mb-3">Still need help?</h3>
             <p className={`mb-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-              Can't find what you're looking for? Our support team is here to help.
+              Can&apos;t find what you&apos;re looking for? Our support team is here to help.
             </p>
             <Link 
               href="#contact" 

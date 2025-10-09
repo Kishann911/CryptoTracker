@@ -1,7 +1,7 @@
 "use client";
 
 import ResponsiveLayout from "@/components/ResponsiveLayout";
-import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
+import { Dock, DockIcon, DockItem } from "@/components/ui/dock";
 
 export default function TestDockPage() {
   return (

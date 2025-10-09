@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+// Link import removed as it was unused
 import { useState } from "react";
 import ResponsiveLayout from "@/components/ResponsiveLayout";
 import { useTheme } from '@/context/ThemeContext';
@@ -434,7 +434,7 @@ export default function AlertsPage() {
                         : 'bg-white border border-gray-300 text-gray-900'
                     }`}
                     value={newAlert.type}
-                    onChange={(e) => setNewAlert({...newAlert, type: e.target.value as any})}
+                    onChange={(e) => setNewAlert({...newAlert, type: e.target.value as "price" | "percentage" | "portfolio"})}
                   >
                     <option value="price">Price Alert</option>
                     <option value="percentage">Percentage Change Alert</option>

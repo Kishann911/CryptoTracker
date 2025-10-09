@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -32,7 +32,7 @@ const CryptoPieChart = ({ data, title = "Portfolio Allocation" }: CryptoPieChart
   };
 
   // Custom tooltip component
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: PieDataPoint & { percent: number } }> }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
@@ -88,7 +88,7 @@ const CryptoPieChart = ({ data, title = "Portfolio Allocation" }: CryptoPieChart
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
-              label={({ name, percent }: any) => (
+              label={({ name, percent }) => (
                 <text 
                   className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} 
                   fontSize={12}
@@ -126,7 +126,7 @@ const CryptoPieChart = ({ data, title = "Portfolio Allocation" }: CryptoPieChart
           <div className={`text-xs ${theme === 'dark' ? 'text-muted-foreground' : 'text-gray-500'}`}>Top Asset</div>
           <div className={`font-bold text-lg ${theme === 'dark' ? 'text-foreground' : 'text-gray-900'}`}>
             {dataWithPercentages.length > 0 
-              ? dataWithPercentages.reduce((max, item) => item.percent > (max as any).percent ? item : max).name 
+              ? dataWithPercentages.reduce((max, item) => item.percent > max.percent ? item : max).name 
               : 'N/A'}
           </div>
         </div>

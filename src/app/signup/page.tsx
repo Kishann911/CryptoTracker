@@ -58,19 +58,20 @@ export default function Signup() {
       
       // Redirect to dashboard or home page
       router.push('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Signup error:", err);
       // Provide more user-friendly error messages
-      if (err.code === 'auth/email-already-in-use') {
+      const error = err as Error & { code?: string };
+      if (error.code === 'auth/email-already-in-use') {
         setError("An account with this email already exists");
-      } else if (err.code === 'auth/invalid-email') {
+      } else if (error.code === 'auth/invalid-email') {
         setError("Please enter a valid email address");
-      } else if (err.code === 'auth/weak-password') {
+      } else if (error.code === 'auth/weak-password') {
         setError("Password should be at least 6 characters");
-      } else if (err.code === 'auth/invalid-api-key') {
+      } else if (error.code === 'auth/invalid-api-key') {
         setError("Firebase API key is invalid. Please check your .env.local file and ensure you've added the correct Firebase configuration. See FIREBASE_SETUP.md for instructions. You need to replace the placeholder values with actual credentials from your Firebase Console.");
       } else {
-        setError(err.message || "Failed to create account. Please try again.");
+        setError((error as Error).message || "Failed to create account. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -90,18 +91,19 @@ export default function Signup() {
       
       // Redirect to dashboard or home page
       router.push('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Google signup error:", err);
       // Provide more user-friendly error messages
-      if (err.code === 'auth/popup-blocked') {
+      const error = err as Error & { code?: string };
+      if (error.code === 'auth/popup-blocked') {
         setError("Popup was blocked by your browser. Please allow popups and try again.");
-      } else if (err.code === 'auth/cancelled-popup-request') {
+      } else if (error.code === 'auth/cancelled-popup-request') {
         // User closed the popup, no need to show an error
         setError("");
-      } else if (err.code === 'auth/invalid-api-key') {
+      } else if (error.code === 'auth/invalid-api-key') {
         setError("Firebase API key is invalid. Please check your .env.local file and ensure you've added the correct Firebase configuration. See FIREBASE_SETUP.md for instructions. You need to replace the placeholder values with actual credentials from your Firebase Console.");
       } else {
-        setError(err.message || "Failed to sign up with Google. Please try again.");
+        setError((error as Error).message || "Failed to sign up with Google. Please try again.");
       }
     } finally {
       setLoading(false);

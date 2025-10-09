@@ -43,21 +43,22 @@ export default function Login() {
       
       // Redirect to dashboard or home page
       router.push('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Login error:", err);
       // Provide more user-friendly error messages
-      if (err.code === 'auth/invalid-email') {
+      const error = err as Error & { code?: string };
+      if (error.code === 'auth/invalid-email') {
         setError("Please enter a valid email address");
-      } else if (err.code === 'auth/user-not-found') {
+      } else if (error.code === 'auth/user-not-found') {
         setError("No account found with this email");
-      } else if (err.code === 'auth/wrong-password') {
+      } else if (error.code === 'auth/wrong-password') {
         setError("Incorrect password");
-      } else if (err.code === 'auth/invalid-credential') {
+      } else if (error.code === 'auth/invalid-credential') {
         setError("Invalid credentials. Please check your email and password.");
-      } else if (err.code === 'auth/invalid-api-key') {
+      } else if (error.code === 'auth/invalid-api-key') {
         setError("Firebase API key is invalid. Please check your .env.local file and ensure you've added the correct Firebase configuration. See FIREBASE_SETUP.md for instructions. You need to replace the placeholder values with actual credentials from your Firebase Console.");
       } else {
-        setError(err.message || "Failed to log in. Please try again.");
+        setError((error as Error).message || "Failed to log in. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -76,18 +77,19 @@ export default function Login() {
       
       // Redirect to dashboard or home page
       router.push('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Google login error:", err);
       // Provide more user-friendly error messages
-      if (err.code === 'auth/popup-blocked') {
+      const error = err as Error & { code?: string };
+      if (error.code === 'auth/popup-blocked') {
         setError("Popup was blocked by your browser. Please allow popups and try again.");
-      } else if (err.code === 'auth/cancelled-popup-request') {
+      } else if (error.code === 'auth/cancelled-popup-request') {
         // User closed the popup, no need to show an error
         setError("");
-      } else if (err.code === 'auth/invalid-api-key') {
+      } else if (error.code === 'auth/invalid-api-key') {
         setError("Firebase API key is invalid. Please check your .env.local file and ensure you've added the correct Firebase configuration. See FIREBASE_SETUP.md for instructions. You need to replace the placeholder values with actual credentials from your Firebase Console.");
       } else {
-        setError(err.message || "Failed to log in with Google. Please try again.");
+        setError((error as Error).message || "Failed to log in with Google. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -117,10 +119,11 @@ export default function Login() {
       modal.open();
       
       // Listen for connection events
-      const unsubscribe = modal.subscribeState((state: any) => {
-        if (state.isConnected) {
+      const unsubscribe = modal.subscribeState((state) => {
+        // Check if the state has the properties we need
+        if ('connectionState' in state && state.connectionState === 'connected' && 'address' in state) {
           // Get the user's wallet address
-          const address = state.address;
+          const address = (state as Record<string, unknown>).address as string;
           
           if (address) {
             // Create a message for the user to sign
@@ -131,7 +134,7 @@ export default function Login() {
             import('../../lib/wallet-auth').then(({ authenticateWithWallet }) => {
               // Using a placeholder signature for demonstration
               const placeholderSignature = "0x"; // This should be replaced with actual signature
-              authenticateWithWallet(placeholderSignature, address, message).then((authResult: any) => {
+              authenticateWithWallet(placeholderSignature, address, message).then((authResult) => {
                 if (authResult.success) {
                   // Redirect to dashboard or home page
                   router.push('/dashboard');
@@ -274,7 +277,7 @@ export default function Login() {
             </button>
 
             <p className={`text-center text-sm ${theme === 'dark' ? 'text-muted-foreground' : 'text-gray-600'}`}>
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href="/signup" className={theme === 'dark' ? 'text-primary hover:text-primary/80' : 'text-blue-600 hover:text-blue-500'}>
                 Sign up
               </Link>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import ResponsiveLayout from "@/components/ResponsiveLayout";
 import { useTheme } from '@/context/ThemeContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import Image from 'next/image';
 
 // User interface
 interface User {
@@ -434,7 +435,7 @@ export default function UsersDashboard() {
     
     setUsers(usersWithScores);
     setLoading(false);
-  }, []);
+  }, [mockUsers]);
 
   // Format currency
   const formatCurrency = (value: number) => {
@@ -564,10 +565,12 @@ export default function UsersDashboard() {
               onClick={() => setSelectedUser(user)}
             >
               <div className="flex items-center space-x-4">
-                <img 
+                <Image 
                   src={user.photoURL} 
                   alt={user.name} 
-                  className="w-16 h-16 rounded-full object-cover"
+                  width={64}
+                  height={64}
+                  className="rounded-full object-cover"
                 />
                 <div>
                   <h2 className={`text-lg font-bold ${theme === 'dark' ? 'text-foreground' : 'text-gray-900'}`}>
@@ -630,7 +633,7 @@ export default function UsersDashboard() {
             <div className="p-6">
               <div className="flex justify-between items-start mb-6">
                 <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-foreground' : 'text-gray-900'}`}>
-                  {selectedUser.name}'s Portfolio
+                  {selectedUser.name}&apos;s Portfolio
                 </h2>
                 <button 
                   onClick={() => setSelectedUser(null)}
@@ -646,10 +649,12 @@ export default function UsersDashboard() {
                 {/* User Info */}
                 <div>
                   <div className="flex items-center space-x-4 mb-6">
-                    <img 
+                    <Image 
                       src={selectedUser.photoURL} 
                       alt={selectedUser.name} 
-                      className="w-20 h-20 rounded-full object-cover"
+                      width={80}
+                      height={80}
+                      className="rounded-full object-cover"
                     />
                     <div>
                       <h3 className={`text-xl font-bold ${theme === 'dark' ? 'text-foreground' : 'text-gray-900'}`}>
