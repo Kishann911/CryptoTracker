@@ -105,12 +105,28 @@ npm install
 yarn install
 ```
 
-4. Set up environment variables:
-   - Copy `.env.example` to `.env.local`
-   - **IMPORTANT**: Replace all placeholder values in `.env.local` with your actual credentials:
-     - Firebase configuration (see [FIREBASE_SETUP.md](FIREBASE_SETUP.md) for detailed instructions)
-     - WalletConnect Project ID (get from https://cloud.reown.com/)
-   - **Failure to update these values will result in authentication errors**
+4. **Set up environment variables (CRITICAL - READ CAREFULLY):**
+   
+   > **⚠️ SECURITY WARNING**: Improper handling of Firebase credentials can expose your entire database. Follow these steps carefully.
+   
+   ```bash
+   # Copy the example file
+   cp .env.example .env.local
+   ```
+   
+   **Quick Start Security Checklist:**
+   - [ ] Copy `.env.example` to `.env.local`
+   - [ ] Fill in Firebase client configuration (see [FIREBASE_SETUP.md](FIREBASE_SETUP.md))
+   - [ ] Set up Firebase Admin SDK credentials (see [SECURITY.md](SECURITY.md))
+   - [ ] Get WalletConnect Project ID from https://cloud.reown.com/
+   - [ ] Verify `.env.local` is in `.gitignore`
+   - [ ] **NEVER commit `.env.local` to version control**
+   - [ ] Store service account keys **outside** the project directory
+   
+   **For detailed setup instructions, see:**
+   - [SECURITY.md](SECURITY.md) - **READ THIS FIRST** for credential security best practices
+   - [FIREBASE_SETUP.md](FIREBASE_SETUP.md) - Step-by-step Firebase configuration guide
+
 
 5. Run the development server:
 ```bash
@@ -145,6 +161,42 @@ const MyComponent = () => {
   );
 };
 ```
+
+## Security
+
+> **🔒 Security is a top priority for CryptoTracker.** This application handles sensitive financial data and Firebase credentials that require proper security practices.
+
+### Security Best Practices
+
+**DO:**
+- ✅ Keep `.env.local` in `.gitignore` (already configured)
+- ✅ Store service account keys outside the project directory
+- ✅ Use different Firebase projects for development/staging/production
+- ✅ Rotate credentials regularly (every 90 days)
+- ✅ Enable Firebase Security Rules and App Check
+- ✅ Monitor Firebase usage for unusual activity
+
+**DON'T:**
+- ❌ Commit `.env.local` or service account keys to version control
+- ❌ Share credentials via email, messaging apps, or screenshots
+- ❌ Store service account keys in the project directory
+- ❌ Use production credentials in development
+- ❌ Expose Firebase Admin SDK credentials in client-side code
+
+### Security Documentation
+
+- **[SECURITY.md](SECURITY.md)** - Comprehensive security guide covering:
+  - Firebase credentials security
+  - Environment variable setup
+  - Service account management
+  - Incident response procedures
+  - Credential rotation guidelines
+
+- **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)** - Firebase configuration guide with security considerations
+
+### Reporting Security Issues
+
+If you discover a security vulnerability, please **do not** create a public issue. Contact the project maintainer directly.
 
 ## Firebase Setup
 

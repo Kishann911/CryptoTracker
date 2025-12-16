@@ -22,7 +22,7 @@
 
 # misc
 .DS_Store
-*.pem
+
 
 # debug
 npm-debug.log*
@@ -41,12 +41,39 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Firebase service account files
+# ============================================================================
+# SECURITY: Firebase & Sensitive Credentials
+# ============================================================================
+# CRITICAL: These patterns protect sensitive Firebase credentials from being
+# committed to version control. Never remove or modify these patterns.
+# ============================================================================
+
+# Firebase service account files (contain private keys - NEVER commit)
 firebase-service-account.json
 *-service-account.json
 *-service-account-key.json
+serviceAccountKey.json
+serviceAccount.json
+
+# Google Cloud credentials
 *-credentials.json
-firebase-service-account-template.json
+google-credentials.json
+gcloud-credentials.json
+
+# Firebase config files with secrets
+firebase-config.json
+firebase-adminsdk-*.json
+
+# Any JSON files in .firebase directory
+.firebase/*.json
+!.firebase/firebase.json
+
+# Private keys
+*.pem
+*.key
+*.p12
+*.pfx
+
 
 # Log files
 *.log
