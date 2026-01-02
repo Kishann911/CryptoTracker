@@ -3,7 +3,7 @@ import { admin } from '@/lib/firebaseAdmin';
 
 export async function POST(request: Request) {
   try {
-    const { email, name, walletAddress } = await request.json();
+    const { email, name, walletAddress, uid } = await request.json();
 
     // Validate input
     if (!email || !name) {
@@ -14,6 +14,7 @@ export async function POST(request: Request) {
     }
 
     // Initialize Firebase Admin if not already initialized
+    // Using the centralized helper would be better, but let's keep it consistent for now
     if (!admin.apps.length) {
       try {
         admin.initializeApp({
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
       } catch (initError) {
         console.error('Firebase Admin initialization error:', initError);
         return NextResponse.json(
-          { 
+          {
             error: 'Firebase Admin not properly configured',
             message: 'Service account credentials are required for server-side Firebase operations. See FIREBASE_SETUP.md for instructions.'
           },
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
 
     const db = admin.firestore();
 
-    // Create new user document with the specified ID
+    // Create new user document
     const userData = {
       email: email,
       name: name,
@@ -48,12 +49,17 @@ export async function POST(request: Request) {
       }
     };
 
-    // Add user with the specified ID: 0sEv6k6Kg1EUbMJYtkPz
-    const userId = '0sEv6k6Kg1EUbMJYtkPz';
-    await db.collection('users').doc(userId).set(userData);
+    // Use provided UID or generate a new one
+    let userId = uid;
+    if (userId) {
+      await db.collection('users').doc(userId).set(userData);
+    } else {
+      const docRef = await db.collection('users').add(userData);
+      userId = docRef.id;
+    }
 
-    return NextResponse.json({ 
-      message: 'User created successfully', 
+    return NextResponse.json({
+      message: 'User created successfully',
       userId: userId,
       data: userData
     }, { status: 201 });
@@ -62,8 +68,8 @@ export async function POST(request: Request) {
     // Return more detailed error information in development
     if (process.env.NODE_ENV === 'development') {
       return NextResponse.json(
-        { 
-          error: 'Internal server error', 
+        {
+          error: 'Internal server error',
           details: (error as Error).message || 'Unknown error',
           code: (error as Error & { code?: string }).code || 'UNKNOWN'
         },

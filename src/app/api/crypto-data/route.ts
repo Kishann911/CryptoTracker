@@ -1,16 +1,22 @@
 import { NextResponse } from 'next/server';
 
-const API_KEY = '9de777d0-6bd6-45f6-8973-36469c503042';
+const API_KEY = process.env.CMC_API_KEY || 'your_api_key_here';
 const BASE_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest';
 
 export async function GET() {
   try {
+    // Check if API key is configured
+    if (API_KEY === 'your_api_key_here') {
+      console.warn('CMC_API_KEY is not configured. Please add it to your environment variables.');
+    }
+
     const res = await fetch(BASE_URL, {
       method: 'GET',
       headers: {
         'X-CMC_PRO_API_KEY': API_KEY,
         'Accept': 'application/json',
       },
+      next: { revalidate: 300 } // Cache for 5 minutes
     });
 
     if (!res.ok) {
