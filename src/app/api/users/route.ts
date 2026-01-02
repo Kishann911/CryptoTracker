@@ -1,9 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { admin } from '@/lib/firebaseAdmin';
+import { verifyAuth } from '@/lib/auth-server';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { email, name, walletAddress, uid } = await request.json();
+
+    // Security Check: If UID is provided, verify the requester owns it
+    if (uid) {
+      const decodedToken = await verifyAuth(request);
+      if (!decodedToken || (decodedToken.uid !== uid && !decodedToken.admin)) {
+        return NextResponse.json(
+          { error: 'Unauthorized: Cannot create/update user with different UID' },
+          { status: 403 }
+        );
+      }
+    }
 
     // Validate input
     if (!email || !name) {

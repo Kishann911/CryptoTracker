@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { admin } from '@/lib/firebaseAdmin';
 import { getAuth } from 'firebase-admin/auth';
+import { verifyAuth, hasPermission } from '@/lib/auth-server';
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
     const { uid, email, name, notifications } = await request.json();
 
@@ -11,6 +12,15 @@ export async function PUT(request: Request) {
       return NextResponse.json(
         { error: 'Missing required parameter: uid' },
         { status: 400 }
+      );
+    }
+
+    // Security Check: Verify authentication and permissions
+    const decodedToken = await verifyAuth(request);
+    if (!decodedToken || !hasPermission(decodedToken, uid)) {
+      return NextResponse.json(
+        { error: 'Unauthorized access' },
+        { status: 403 }
       );
     }
 
@@ -24,7 +34,7 @@ export async function PUT(request: Request) {
       } catch (initError) {
         console.error('Firebase Admin initialization error:', initError);
         return NextResponse.json(
-          { 
+          {
             error: 'Firebase Admin not properly configured',
             message: 'Service account credentials are required for server-side Firebase operations. See FIREBASE_SETUP.md for instructions.'
           },
@@ -59,7 +69,7 @@ export async function PUT(request: Request) {
       }
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: 'User updated successfully',
       data: updateData
     }, { status: 200 });
@@ -68,8 +78,8 @@ export async function PUT(request: Request) {
     // Return more detailed error information in development
     if (process.env.NODE_ENV === 'development') {
       return NextResponse.json(
-        { 
-          error: 'Internal server error', 
+        {
+          error: 'Internal server error',
           details: (error as Error).message || 'Unknown error',
           code: (error as Error & { code?: string }).code || 'UNKNOWN'
         },
